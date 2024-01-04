@@ -1,11 +1,11 @@
 import {useRepository} from '@nfq/typed-next-api';
 
-import {DevelopersService} from 'Application/services/DevelopersService';
+import DevelopersService from 'Application/services/DevelopersService';
 
 /**
- * A.
+ * Custom hook to retrieve the list of Developers from the backend.
  *
- * @returns A.
+ * @returns An object containing the data or an error if present, as well as the loading state.
  */
 export const useGetDevelopers = () => {
     const {data, error, isValidating} = useRepository<typeof DevelopersService.getDevelopers>(

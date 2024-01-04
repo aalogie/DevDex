@@ -25,6 +25,9 @@ ChartJS.register(
  * It outlines the required properties that needs to be provided when utilizing this component expecting an object of this type.
  */
 interface ComponentProps {
+    /**
+     * The information of a developer that are needed to be stored for each added developer.
+     */
     details: Developer;
     /**
      * The `testId` property represents a unique identifier, usually in the form of a string, assigned to a component for testing purposes.
@@ -39,9 +42,8 @@ interface ComponentProps {
  *
  * @param props         The component props.
  * @param props.testId  A unique identifier, usually in the form of a string, assigned to the component for testing purposes.
- * @param props.details A.
+ * @param props.details The information of a developer that are needed to be stored for each added developer.
  * @returns A React element representing the `DeveloperRadar` component.
- * @todo Add true documentation!
  *
  * @example
  * ```tsx
@@ -71,7 +73,10 @@ const DeveloperRadar = ({details, testId}: ComponentProps) => {
                 angleLines: {display: false},
                 max: 99,
                 min: 50,
-                ticks: {stepSize: 1},
+                ticks: {
+                    display: false,
+                    stepSize: 3
+                },
                 type: 'radialLinear'
             }
         }

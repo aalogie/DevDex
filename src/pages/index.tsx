@@ -1,5 +1,7 @@
-import {Container, Row} from '@nfq/react-grid';
+import {Col, Container, Row, Spacer} from '@nfq/react-grid';
+import styled from 'styled-components';
 
+import {H2} from 'UI/layouts/Typography';
 import {DevelopersList} from 'UI/modules/DevelopersList';
 
 import type {NextPageWithLayout} from 'types/global';
@@ -11,12 +13,19 @@ import type {NextPageWithLayout} from 'types/global';
  */
 const HomePage: NextPageWithLayout = () => (
     <Container as="main">
+        <Spacer y={4} />
+        <Heading>Developers Dex</Heading>
         <Row>
-            {/* <Col><ListOfDevelopers /></Col> */}
-            <DevelopersList />
+            <Col>
+                <DevelopersList />
+            </Col>
         </Row>
     </Container>
 );
+
+const Heading = styled(H2)`
+    text-align: center;
+`;
 
 /**
  * Gets the layout for this page.

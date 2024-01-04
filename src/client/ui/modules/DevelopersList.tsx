@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
+import {Button} from 'UI/components/Buttons/Button';
 import {DeveloperPill} from 'UI/components/DeveloperPill';
 
 import {useGetDevelopers} from 'Application/useCases/useGetDevelopers';
 
 import type {Developer} from 'ServerDomain/entities/Developer';
-import Link from 'next/link';
 
 /**
  * The `ComponentProps` interface defines the shape of the properties object that is expected for this component.
@@ -26,7 +26,6 @@ interface ComponentProps {
  * @param props        The component props.
  * @param props.testId A unique identifier, usually in the form of a string, assigned to the component for testing purposes.
  * @returns A React element representing the `DevelopersList` component.
- * @todo Add true documentation!
  *
  * @example
  * ```tsx
@@ -40,8 +39,10 @@ const DevelopersList = ({testId}: ComponentProps) => {
 
     return (
         <Wrapper data-cy={testId}>
-            <Link href="/devs/add">Add Developer</Link>
-            {data?.map((dev: Developer) => <DeveloperPill key={dev.id} devDetails={dev} />)}
+            <Button as="link" href="/devs/add" size="normal" variant="secondary" width="auto">Add Developer</Button>
+            <ListWrapper>
+                {(data as Developer[]).map((dev: Developer) => <DeveloperPill key={dev.id} devDetails={dev} />)}
+            </ListWrapper>
         </Wrapper>
     );
 };
@@ -51,4 +52,13 @@ DevelopersList.defaultProps = {testId: 'DevelopersList'};
 
 export {DevelopersList};
 
-const Wrapper = styled.ul``;
+const Wrapper = styled.div`
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    padding-top: 2rem;
+`;
+
+const ListWrapper = styled.ul`
+    padding: 0;
+`;

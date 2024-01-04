@@ -2,10 +2,11 @@
 import {Container} from '@nfq/react-grid';
 
 import {DeveloperService} from 'Services/DeveloperService';
+import {EditDeveloper} from 'UI/modules/EditDeveloper';
 
-import type {Developer} from 'Domain/entities/Developer';
 import type {GetServerSideProps} from 'next';
 import type {ParsedUrlQuery} from 'querystring';
+import type {Developer} from 'ServerDomain/entities/Developer';
 import type {NextSSRPageWithLayout} from 'types/global';
 
 /**
@@ -19,26 +20,26 @@ interface ServerSideProps {
      * It is a required property and must be provided when an object of type `ServerSideProps` is expected.
      * This property is crucial for uniquely identifying elements, components, or data within the application.
      */
-    developersList: Developer[];
+    devDetails: Developer | null;
 }
 
 /**
- * The `ListOfDevelopers` component is a Next.js page component.
+ * The `Edit` component is a Next.js page component.
  * It is used as a route and can be accessed throught the nextjs router.
  *
- * @param props                The props object containing the properties for this page.
- * @param props.id             The `id` property represents a unique identifier, usually in the form of a string.
- * @param props.developersList A.
- * @returns A ReactNode representing the `ListOfDevelopers` page.
+ * @param props            The props object containing the properties for this page.
+ * @param props.id         The `id` property represents a unique identifier, usually in the form of a string.
+ * @param props.devDetails The information of the target developer.
+ * @returns A ReactNode representing the `Edit` page.
  */
-const ListOfDevelopers: NextSSRPageWithLayout<typeof getServerSideProps> = ({developersList}) => (
+const Edit: NextSSRPageWithLayout<typeof getServerSideProps> = ({devDetails}) => (
     <Container as="section" isFluid>
-        ListOfDevelopers {developersList.length}
+        <EditDeveloper developer={devDetails} />
     </Container>
 );
 
 /**
- * `getLayout` is a static property of the `ListOfDevelopers` component that is a function designed to wrap the component with a specified layout.
+ * `getLayout` is a static property of the `Edit` component that is a function designed to wrap the component with a specified layout.
  * It receives the router object, page properties, and the PageComponent and returns the PageComponent wrapped with the necessary layout and properties.
  * This property is essential for applying consistent layouts across different pages in the application.
  *
@@ -49,28 +50,28 @@ const ListOfDevelopers: NextSSRPageWithLayout<typeof getServerSideProps> = ({dev
  *
  * @example
  * ```tsx
- * const LayoutWrappedComponent = ListOfDevelopers.getLayout(router, pageProps, PageComponent);
+ * const LayoutWrappedComponent = Edit.getLayout(router, pageProps, PageComponent);
  * ```
  */
-ListOfDevelopers.getLayout = (router, pageProps, PageComponent) => (
+Edit.getLayout = (router, pageProps, PageComponent) => (
     <PageComponent router={router} {...pageProps} />
 );
 
 /**
- * `getLayoutKey` is a static property of the `ListOfDevelopers` component that is a function designed to return the layout key string.
+ * `getLayoutKey` is a static property of the `Edit` component that is a function designed to return the layout key string.
  * It is used to determine if the layout changed between pages to apply transitions between different layouts.
- * This property is crucial for managing different layouts within the application and for providing a specific layout key for the `ListOfDevelopers` component.
+ * This property is crucial for managing different layouts within the application and for providing a specific layout key for the `Edit` component.
  *
  * @returns A string representing the layout key.
  *
  * @example
  * ```tsx
- * const layoutKey = ListOfDevelopers.getLayoutKey();
+ * const layoutKey = Edit.getLayoutKey();
  * ```
  */
-ListOfDevelopers.getLayoutKey = () => '';
+Edit.getLayoutKey = () => '';
 
-export default ListOfDevelopers;
+export default Edit;
 
 /**
  * The `ServerSideParams` interface extends the `ParsedUrlQuery` interface and is designed to represent the structure of the parameters object, specifically for server rendered paths.
@@ -86,10 +87,17 @@ interface ServerSideParams extends ParsedUrlQuery {
  * It is used in the context of Server-side Rendering and is crucial for pages that need to perform data fetching on every request, allowing for real-time data fetching and SEO optimization.
  * This function is essential for fetching the necessary data required by a page and providing it as props, ensuring the correct and up-to-date data is available during the rendering process.
  *
+ * @param context The context object contains parameters of the server-side page, including `params` which holds the dynamic segments of the route.
  * @returns A promise resolving to an object containing the `props` to be passed to the page component.
  */
-export const getServerSideProps: GetServerSideProps<ServerSideProps, ServerSideParams> = async () => {
-    const developersList = await DeveloperService.getDevelopers();
+export const getServerSideProps: GetServerSideProps<ServerSideProps, ServerSideParams> = async context => {
+    const {id} = context.params!;
+    const devDetails = await DeveloperService.getDeveloperById(id);
 
-    return {props: {developersList}};
+    return Promise.resolve({
+        props: {
+            devDetails,
+            id
+        }
+    });
 };

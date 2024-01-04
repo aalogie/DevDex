@@ -36,8 +36,16 @@ const nfqgrid: Config = {
 };
 
 export enum Colors {
-    /** Page background color. ![#FFFFFF](https://via.placeholder.com/12/FFFFFF/FFFFFF.png) `#FFFFFF`. */
-    pageBackground = '#FFFFFF'
+    /** Page Background Color. ![#FFFFFF](https://via.placeholder.com/12/FFFFFF/FFFFFF.png) `#FFFFFF`. */
+    pageBackground = '#FFFFFF',
+    /** Primary Action Color. ![#6E6E6E](https://via.placeholder.com/12/6E6E6E/6E6E6E.png) `#6E6E6E`. */
+    primaryActionColor = '#6E6E6E',
+    /** Primary Action Font Color. ![#FFB5B5](https://via.placeholder.com/12/FFB5B5/FFB5B5.png) `#FFB5B5`. */
+    primaryActionFontColor = '#FFB5B5',
+    /** Secondary Action Color. ![#6E6E6E](https://via.placeholder.com/12/6E6E6E/6E6E6E.png) `#6E6E6E`. */
+    secondaryActionColor = '#6E6EFE',
+    /** Secondary Action Font Color. ![#FFB5B5](https://via.placeholder.com/12/FFB5B5/FFB5B5.png) `#FFB5B5`. */
+    secondaryActionFontColor = '#FFB5F5'
 }
 
 export enum BoxShadows {

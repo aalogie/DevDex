@@ -1,11 +1,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import {Col, Container, Row, Spacer} from '@nfq/react-grid';
-import Link from 'next/link';
 
+import {Button} from 'UI/components/Buttons/Button';
 import {DeveloperCard} from 'UI/components/DeveloperCard';
 import {DeveloperRadar} from 'UI/components/DeveloperRadar';
 
 import {DeveloperService} from 'Services/DeveloperService';
+import {ButtonsWrapper} from 'UI/modules/AddDeveloper';
 
 import type {GetServerSideProps} from 'next';
 import type {ParsedUrlQuery} from 'querystring';
@@ -18,7 +19,8 @@ import type {NextSSRPageWithLayout} from 'types/global';
  * This interface is crucial for ensuring the correct usage of components or functions and for providing TypeScript type checking and IntelliSense support in IDEs.
  */
 interface ServerSideProps {
-    details: Developer;
+    details: Developer | null;
+    nextId: string;
 }
 
 /**
@@ -27,20 +29,29 @@ interface ServerSideProps {
  *
  * @param props         The props object containing the properties for this page.
  * @param props.details A.
+ * @param props.nextId  A.
  * @returns A ReactNode representing the `Id` page.
  */
-const Id: NextSSRPageWithLayout<typeof getServerSideProps> = ({details}) => (
+const Id: NextSSRPageWithLayout<typeof getServerSideProps> = ({details, nextId}) => (
     <Container as="section" isFluid>
         <Spacer y={10} />
         <Row align="center">
-            <Col align="center">
-                <DeveloperCard details={details} />
-            </Col>
-            <Col>
-                <DeveloperRadar details={details} />
-            </Col>
+            {details && (
+                <>
+                    <Col align="center">
+                        <DeveloperCard details={details} />
+                        <Spacer y={4} />
+                        <ButtonsWrapper>
+                            <Button as="link" href="/" size="normal" variant="secondary" width="auto">Back</Button>
+                            {nextId !== 'undefined' && <Button as="link" href={`/devs/${nextId}`} size="normal" variant="primary" width="auto" isDisabled>Next</Button>}
+                        </ButtonsWrapper>
+                    </Col>
+                    <Col>
+                        <DeveloperRadar details={details} />
+                    </Col>
+                </>
+            )}
         </Row>
-        <Link href="/">Back</Link>
     </Container>
 );
 
@@ -100,6 +111,18 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps, ServerSideP
     const {id} = context.params!;
 
     const details = await DeveloperService.getDeveloperById(id);
+    const data = await DeveloperService.getDevelopers();
+    const ids = data.map((dev: Developer) => dev.id);
+    let nextId;
 
-    return {props: {details}};
+    if (details) {
+        nextId = ids[ids.indexOf(details.id) - 1];
+    }
+
+    return {
+        props: {
+            details,
+            nextId: `${nextId}`
+        }
+    };
 };

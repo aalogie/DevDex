@@ -1,11 +1,9 @@
 import {PrismaClient} from '@prisma/client';
 
-declare global {
-    const prisma: PrismaClient | undefined;
+if (!global.prisma) {
+    process.stdout.write('Creating new prisma client\n');
+    global.prisma = new PrismaClient();
 }
 
-export const prisma
-    = global.prisma
-    || new PrismaClient();
-
-if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
+// eslint-disable-next-line prefer-destructuring
+export const prisma = global.prisma as PrismaClient;
